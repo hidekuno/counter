@@ -1,0 +1,6 @@
+*.o
+*.ko
+Module.markers
+Module.symvers
+*.mod.c
+*.mod.o
