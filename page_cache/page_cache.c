@@ -1,3 +1,12 @@
+//========================================================================
+// Usage:
+//  sudo insmod page_cache.ko
+//  echo "1234567890" > test_file
+//  ./test.pl
+//  sudo echo ${processID} > /proc/test_cache
+//  dmesg
+//  sudo rmmod page_cache
+//========================================================================
 #include <linux/kernel.h>
 #include <linux/sched.h>
 #include <linux/module.h>
@@ -8,8 +17,6 @@
 
 #define PROC_FILE_NAME "test_cache"
 #define VERSION "0.0.1"
-
-
 
 static void do_page_cache(struct task_struct *process)
 {
@@ -60,10 +67,13 @@ static struct file_operations proc_ops = {
 static struct proc_dir_entry *proc;
 static int proc_init_module(void)
 {
+   proc = proc_create_data(PROC_FILE_NAME, 0666, NULL, &proc_ops,  "Hello,World");
+#if 0
    proc = create_proc_entry(PROC_FILE_NAME, 0666, (struct proc_dir_entry *) 0);
    if (proc) {
        proc->proc_fops = &proc_ops;
    }
+#endif
    return 0;
 }
 
