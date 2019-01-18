@@ -1,7 +1,7 @@
 # centos
 # yum install kernel-devel
 #
-KERNEL_SRC_DIR = /usr/src/kernels/3.10.0-693.el7.x86_64
+KERNEL_SRC_DIR = /usr/src/kernels/3.10.0-957.1.3.el7.x86_64/
 DEV_SRC_DIR = `pwd`
 TARGET:= page_cache.ko
 
