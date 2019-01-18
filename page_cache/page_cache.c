@@ -34,23 +34,24 @@ static void do_page_cache(struct task_struct *process)
    if (hit) {
        struct address_space *mapping = files->fdt->fd[i]->f_mapping;
        struct radix_tree_node *node  = mapping->page_tree.rnode;
-       struct page            *page  = node;
-       printk("%s", kmap(page));
+       struct page            *page  = (struct page *)node;
+       printk("%s", (char*)kmap(page));
    }
-   return 0;
+   return;
 }
 
-static size_t proc_write( struct file *filp, const char __user *buff,
-                                   unsigned long len, void *data )
+static size_t proc_write(struct file *filp, const char __user *buff, size_t len, loff_t *data)
 {
    char    _buff[64];
+   struct task_struct *process;
+   pid_t pid; 
 
    if (copy_from_user(_buff, buff, len )) {
        return -EFAULT;
    }
-   pid_t pid = simple_strtol(_buff, NULL, 0);
+   pid = simple_strtol(_buff, NULL, 0);
 
-   struct task_struct *process = pid_task(find_vpid(pid), PIDTYPE_PID);
+   process = pid_task(find_vpid(pid), PIDTYPE_PID);
    if (process) { 
        do_page_cache(process);
    }
@@ -61,6 +62,7 @@ static size_t proc_write( struct file *filp, const char __user *buff,
    return len;
 }
 static struct file_operations proc_ops = {
+   .owner = THIS_MODULE,
    .write = proc_write
 };
 

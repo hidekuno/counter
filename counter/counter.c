@@ -22,8 +22,7 @@ static char *devname = "counter";
 module_param(devmajor, int, 0644);
 module_param(devname, charp,0644);
 
-static int counter_open (struct inode *inode,
-						 struct file *file){
+static int counter_open (struct inode *inode, struct file *file){
 
 	if (busy) { 
 		printk("counter open error\n");
@@ -35,15 +34,11 @@ static int counter_open (struct inode *inode,
 	return 0;
 }
 
-static int counter_release (struct inode *inode,
-							struct file *file) {
+static int counter_release (struct inode *inode,struct file *file) {
 	busy = 0;
 	return 0;
 }
-static ssize_t counter_read (struct file *file,
-				 char __user *buf,
-				 size_t count,
-				 loff_t *ppos) {
+static ssize_t counter_read (struct file *file, char __user *buf, size_t count, loff_t *ppos) {
 	char numstr[ 16 ];
 	ssize_t len;
 
@@ -59,10 +54,7 @@ static ssize_t counter_read (struct file *file,
 	return len;
 }
 
-static ssize_t counter_write (struct file *file,
-				 const char __user *buf,
-				 size_t count,
-				 loff_t *ppos) {
+static ssize_t counter_write (struct file *file, const char __user *buf,  size_t count, loff_t *ppos) {
 	char numstr[ 16 ];
 	ssize_t len;
 
