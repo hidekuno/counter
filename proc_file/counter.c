@@ -17,7 +17,7 @@ static unsigned int value = 0;
 static unsigned int busy = 0;
 static unsigned int eof = 0;
 
-static int counter_open (struct inode *inode, struct file *file){
+static int counter_open(struct inode *inode, struct file *file){
 
 	if (busy) { 
 		printk("counter open error\n");
@@ -28,11 +28,11 @@ static int counter_open (struct inode *inode, struct file *file){
 	eof = 0;
 	return 0;
 }
-static int counter_release (struct inode *inode,struct file *file) {
+static int counter_release(struct inode *inode,struct file *file) {
 	busy = 0;
 	return 0;
 }
-static ssize_t counter_read (struct file *file, char __user *buf, size_t count, loff_t *ppos) {
+static ssize_t counter_read(struct file *file, char __user *buf, size_t count, loff_t *ppos) {
 	char numstr[ 16 ];
 	ssize_t len;
 
@@ -61,23 +61,23 @@ static ssize_t counter_write(struct file *file, const char __user *buf,  size_t 
 	return len;
 }
 static struct file_operations proc_ops = {
-   .owner   = THIS_MODULE,
-   .open    = counter_open,
-   .write   = counter_write,
-   .read    = counter_read,
-   .release = counter_release
+    .owner   = THIS_MODULE,
+    .open    = counter_open,
+    .write   = counter_write,
+    .read    = counter_read,
+    .release = counter_release
 };
 
 static struct proc_dir_entry *proc;
 static int proc_init_module(void)
 {
-   proc = proc_create_data(PROC_FILE_NAME, 0666, NULL, &proc_ops,  "Hello,World");
-   return 0;
+    proc = proc_create_data(PROC_FILE_NAME, 0666, NULL, &proc_ops,  "Hello,World");
+    return 0;
 }
 
 static void proc_cleanup_module(void)
 {
-   remove_proc_entry(PROC_FILE_NAME, (struct proc_dir_entry *) 0);
+    remove_proc_entry(PROC_FILE_NAME, (struct proc_dir_entry *) 0);
 }
 
 module_init(proc_init_module);
