@@ -1,0 +1,1 @@
+cmd_/home/kunohi/counter/proc_file/counter.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/kunohi/counter/proc_file/counter.ko /home/kunohi/counter/proc_file/counter.o /home/kunohi/counter/proc_file/counter.mod.o
