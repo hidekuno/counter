@@ -40,7 +40,7 @@ static void do_page_cache(struct task_struct *process)
    return;
 }
 
-static size_t proc_write(struct file *filp, const char __user *buff, size_t len, loff_t *data)
+static ssize_t proc_write(struct file *filp, const char __user *buff, size_t len, loff_t *data)
 {
    char    _buff[64];
    struct task_struct *process;
