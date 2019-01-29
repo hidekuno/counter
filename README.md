@@ -1,10 +1,31 @@
-ƒJ[ƒlƒ‹ƒ‚ƒWƒ…[ƒ‹‚ÌƒTƒ“ƒvƒ‹
+ã‚«ãƒ¼ãƒãƒ«ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã‚µãƒ³ãƒ—ãƒ«
 =================
-# counter
+
+# å‹•ä½œç’°å¢ƒ
+| Item   | Ver. |å‚™è€ƒ|
+|--------|--------|--------|
+| OS     | CentOS7 | |
+| ã‚«ãƒ¼ãƒãƒ« | 3.10.0-957.1.3||
+| GCC    | 4.8.5||
+
+
+# counter(/devç‰ˆ)
 ```
+cd special_file
+make
 sudo insmod counter.ko
 sudo mknod /dev/counter c 90 1
 cat /dev/counter
+sudo rmmod counter
+
+```
+
+# counter(/procç‰ˆ)
+```
+cd proc_file
+make
+sudo insmod counter.ko
+cat /proc/counter
 sudo rmmod counter
 
 ```
