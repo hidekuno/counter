@@ -7,7 +7,7 @@
 #include <sys/select.h>
 
 /* 
-*   gcc -fPIC -shared fake.c -o fake.so  -ldl
+*   gcc -fPIC -shared fake_mkdir.c -o fake.so  -ldl
 */
 static const int TEST_DELAY = 10;
 static int counter = 1;
