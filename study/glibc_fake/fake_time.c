@@ -2,6 +2,9 @@
 #include <dlfcn.h>
 #include <time.h>
 
+/*
+*   gcc -fPIC -shared fake_time.c -o fake.so  -ldl
+*/
 typedef time_t (*glibc_time_type)();
 time_t time(time_t *t) {
 
