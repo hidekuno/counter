@@ -5,7 +5,7 @@
 #include <sys/select.h>
 
 /* 
-*   gcc -fPIC -shared fake.c -o fake.so  -ldl
+*   gcc -fPIC -shared fake_bind.c -o fake.so  -ldl
 */
 static const int TEST_DELAY = 30;
 static int counter = 1;
