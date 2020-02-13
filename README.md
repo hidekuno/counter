@@ -13,7 +13,7 @@
 ```
 git clone https://github.com/hidekuno/counter.git
 cd special_file
-make
+KERN_SRC=${where} make
 sudo insmod counter.ko
 sudo mknod /dev/counter c 90 1
 cat /dev/counter
@@ -23,7 +23,7 @@ sudo rmmod counter
 # counter(/proc版)
 ```
 cd proc_file
-make
+KERN_SRC=${where} make
 sudo insmod counter.ko
 cat /proc/counter
 sudo rmmod counter
