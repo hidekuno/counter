@@ -58,7 +58,7 @@ ZERO:	.byte 0x30
 ivalue:	.int 1234567890
 
 .bss
-.comm buffer,1024
+buffer: .space 1024
 
 .text
 length:	
