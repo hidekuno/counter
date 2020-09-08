@@ -7,7 +7,7 @@
 #include <linux/version.h>
 #include <linux/kernel.h>
 #include <linux/fs.h>
-#include <asm/uaccess.h>
+#include <linux/uaccess.h>
 #include <linux/proc_fs.h>
 
 #define PROC_FILE_NAME "counter"
