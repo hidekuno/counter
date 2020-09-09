@@ -11,15 +11,16 @@
 #include <linux/proc_fs.h>
 
 #define PROC_FILE_NAME "counter"
-#define VERSION "0.0.1"
+#define VERSION "0.02"
 
 static unsigned int value = 0;
 static unsigned int busy = 0;
 static unsigned int eof = 0;
 
-static int counter_open(struct inode *inode, struct file *file){
+static int counter_open(struct inode *inode, struct file *file)
+{
 
-	if (busy) { 
+	if (busy) {
 		printk("counter open error\n");
 		return -EBUSY;
 	}
@@ -28,56 +29,71 @@ static int counter_open(struct inode *inode, struct file *file){
 	eof = 0;
 	return 0;
 }
-static int counter_release(struct inode *inode,struct file *file) {
+
+static int counter_release(struct inode *inode, struct file *file)
+{
 	busy = 0;
 	return 0;
 }
-static ssize_t counter_read(struct file *file, char __user *buf, size_t count, loff_t *ppos) {
-	char numstr[ 16 ];
+
+static ssize_t counter_read(struct file *file, char __user * buf,
+			    size_t count, loff_t * ppos)
+{
+	char numstr[16];
 	ssize_t len;
 
-	if ( eof ) return 0;
+	if (eof)
+		return 0;
 
-	sprintf (numstr, "%d\n", value++);
+	sprintf(numstr, "%d\n", value++);
 	len = strlen(numstr) + 1;
 
-	if (10 <= len ) return -EINVAL;
-	if ( copy_to_user( buf, numstr, len)) return -EFAULT;
+	if (10 <= len)
+		return -EINVAL;
+	if (copy_to_user(buf, numstr, len))
+		return -EFAULT;
 
 	eof = 1;
 	return len;
 }
-static ssize_t counter_write(struct file *file, const char __user *buf,  size_t count, loff_t *ppos) {
 
-	char numstr[ 16 ];
+static ssize_t counter_write(struct file *file, const char __user * buf,
+			     size_t count, loff_t * ppos)
+{
+
+	char numstr[16];
 	ssize_t len;
 
-	if (10 <= count ) return -EINVAL;
-	if(copy_from_user(numstr, buf, count)) return -EFAULT;
+	if (10 <= count)
+		return -EINVAL;
+	if (copy_from_user(numstr, buf, count))
+		return -EFAULT;
 
 	sscanf(numstr, "%3d", &value);
 	len = strlen(numstr) + 1;
 
 	return len;
 }
-static struct file_operations proc_ops = {
-    .owner   = THIS_MODULE,
-    .open    = counter_open,
-    .write   = counter_write,
-    .read    = counter_read,
-    .release = counter_release
+
+static struct file_operations counter_ops = {
+	.owner = THIS_MODULE,
+	.open = counter_open,
+	.write = counter_write,
+	.read = counter_read,
+	.release = counter_release
 };
 
 static struct proc_dir_entry *proc;
 static int proc_init_module(void)
 {
-    proc = proc_create_data(PROC_FILE_NAME, 0666, NULL, &proc_ops,  "Hello,World");
-    return 0;
+	proc = proc_create_data(PROC_FILE_NAME, 0666, NULL, &counter_ops,
+				"Hello,World");
+	return 0;
 }
 
 static void proc_cleanup_module(void)
 {
-    remove_proc_entry(PROC_FILE_NAME, (struct proc_dir_entry *) 0);
+	remove_proc_entry(PROC_FILE_NAME, (struct proc_dir_entry *) 0);
 }
 
 module_init(proc_init_module);
