@@ -8,7 +8,7 @@
 #include <linux/version.h>
 #include <linux/kernel.h>
 #include <linux/fs.h>
-#include <asm/uaccess.h>
+#include <linux/uaccess.h>
 
 #define VERSION "0.01"
 
