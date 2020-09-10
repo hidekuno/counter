@@ -4,27 +4,29 @@
 # 動作環境
 | Item   | Ver. |備考|
 |--------|--------|--------|
-| OS     | CentOS7 | |
-| カーネル | 3.10.0-957.1.3||
-| GCC    | 4.8.5||
+| OS     | Ubuntu 18.04.5 LTS | |
+| カーネル | 4.19.104-microsoft-standard||
+| GCC    | 7.5.0||
 
+
+# build
+```
+git clone https://github.com/hidekuno/counter.git
+cd src
+KERN_SRC=${where} make
+```
 
 # counter(/dev版)
 ```
-git clone https://github.com/hidekuno/counter.git
-cd special_file
-KERN_SRC=${where} make
-sudo insmod counter.ko
 sudo mknod /dev/counter c 90 1
+sudo insmod counter.ko
 cat /dev/counter
 sudo rmmod counter
 ```
 
 # counter(/proc版)
 ```
-cd proc_file
-KERN_SRC=${where} make
-sudo insmod counter.ko
-cat /proc/counter
-sudo rmmod counter
+sudo insmod sequence.ko
+cat /proc/sequence
+sudo rmmod sequence
 ```
