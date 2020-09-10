@@ -1,7 +1,7 @@
-カーネルモジュールのサンプル
+Linuxカーネルモジュールのサンプル
 =================
 
-# 動作環境
+# 開発環境
 | Item   | Ver. |備考|
 |--------|--------|--------|
 | OS     | Ubuntu 18.04.5 LTS | |
@@ -11,9 +11,19 @@
 
 # build
 ```
+sudo apt-get install libelf-dev bison flex
+
+sudo git clone https://github.com/microsoft/WSL2-Linux-Kernel.git /usr/src/4.19.104-microsoft-standard
+sudo bash -c "cat /proc/config.gz  | gzip -dc > /usr/src/4.19.104-microsoft-standard/.config"
+
+cd /usr/src/4.19.104-microsoft-standard
+sudo make prepare
+sudo make scripts
+
+cd $HOME
 git clone https://github.com/hidekuno/counter.git
-cd src
-KERN_SRC=${where} make
+cd counter/src
+KERN_SRC=/usr/src/4.19.104-microsoft-standard make
 ```
 
 # counter(/dev版)
