@@ -13,7 +13,8 @@ Linuxカーネルモジュールのサンプル
 ```
 sudo apt-get install libelf-dev bison flex
 
-sudo git clone https://github.com/microsoft/WSL2-Linux-Kernel.git /usr/src/4.19.104-microsoft-standard
+cd /usr/src
+sudo git clone https://github.com/microsoft/WSL2-Linux-Kernel.git
 sudo bash -c "cat /proc/config.gz  | gzip -dc > /usr/src/4.19.104-microsoft-standard/.config"
 
 cd /usr/src/4.19.104-microsoft-standard
