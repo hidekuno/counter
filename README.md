@@ -15,16 +15,16 @@ sudo apt-get install libelf-dev bison flex
 
 cd /usr/src
 sudo git clone https://github.com/microsoft/WSL2-Linux-Kernel.git
-sudo bash -c "cat /proc/config.gz  | gzip -dc > /usr/src/4.19.104-microsoft-standard/.config"
+sudo bash -c "cat /proc/config.gz  | gzip -dc > /usr/src/WSL2-Linux-Kernel/.config"
 
-cd /usr/src/4.19.104-microsoft-standard
+cd /usr/src/WSL2-Linux-Kernel
 sudo make prepare
 sudo make scripts
 
 cd $HOME
 git clone https://github.com/hidekuno/counter.git
 cd counter/src
-KERN_SRC=/usr/src/4.19.104-microsoft-standard make
+KERN_SRC=WSL2-Linux-Kernel make
 ```
 
 # counter(/dev版)
