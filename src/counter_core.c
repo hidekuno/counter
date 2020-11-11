@@ -12,7 +12,8 @@ static unsigned int eof = 0;
 
 #define MAX_LENGTH 10
 
-static int counter_open(struct inode *inode, struct file *file) {
+static int counter_open(struct inode *inode, struct file *file)
+{
 
 	if (busy) {
 		printk("counter open error\n");
@@ -24,31 +25,31 @@ static int counter_open(struct inode *inode, struct file *file) {
 	return 0;
 }
 
-static int counter_release(struct inode *inode, struct file *file) {
+static int counter_release(struct inode *inode, struct file *file)
+{
 	busy = 0;
 	return 0;
 }
 
 static ssize_t counter_read(struct file *file,
-                            char __user * buf,
-                            size_t count,
-                            loff_t * ppos) {
+			    char __user * buf, size_t count, loff_t * ppos)
+{
 	char numstr[16];
 	ssize_t len;
 
 	if (eof) {
 		return 0;
-    }
+	}
 
 	sprintf(numstr, "%d\n", value++);
 	len = strlen(numstr) + 1;
 
 	if (MAX_LENGTH <= len) {
 		return -EINVAL;
-    }
+	}
 	if (copy_to_user(buf, numstr, len)) {
-        return -EFAULT;
-    }
+		return -EFAULT;
+	}
 	eof = 1;
 	return len;
 }
@@ -61,10 +62,10 @@ static ssize_t counter_write(struct file *file, const char __user * buf,
 
 	if (MAX_LENGTH <= count) {
 		return -EINVAL;
-    }
+	}
 	if (copy_from_user(numstr, buf, count)) {
 		return -EFAULT;
-    }
+	}
 	sscanf(numstr, "%3d", &value);
 	len = strlen(numstr) + 1;
 
@@ -79,6 +80,7 @@ static struct file_operations counter_fops = {
 	.release = counter_release,
 };
 
-struct file_operations* get_couter_fops(void) {
-    return &counter_fops;
+struct file_operations *get_couter_fops(void)
+{
+	return &counter_fops;
 }
