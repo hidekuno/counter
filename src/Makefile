@@ -1,6 +1,9 @@
-# centos
-# yum install kernel-devel
 #
+# KERN_SRC=${WHERE} make
+#
+# hidekuno@gmail.com
+#
+
 KERNEL_SRC_DIR = /usr/src/$(KERN_SRC)
 DEV_SRC_DIR = `pwd`
 

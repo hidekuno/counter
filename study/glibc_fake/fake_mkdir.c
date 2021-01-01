@@ -1,3 +1,12 @@
+/*
+ * fake glic sample program
+ *
+ * gcc -fPIC -shared fake_mkdir.c -o fake.so  -ldl
+ * LD_PRELOAD=./fake.so test-program
+ *
+ * hidekuno@gmail.com
+ *
+ */
 #define _GNU_SOURCE
 #include <dlfcn.h>
 #include <sys/socket.h>
@@ -5,10 +14,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/select.h>
+#include <string.h>
 
-/* 
-*   gcc -fPIC -shared fake_mkdir.c -o fake.so  -ldl
-*/
 static const int TEST_DELAY = 10;
 static int counter = 1;
 static int (*mkdir_org)(const char *pathname, mode_t mode);
