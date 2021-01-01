@@ -1,26 +1,47 @@
-// as -g -32 hello.s -o hello.o
-// ld -m elf_i386 --entry=start hello.o -o hello
-//
-.global start,length,print,itos,stoi,bit
-.local msg,LF,ONE,ZERO,buffer,ivalue
+/*
+ * 32bit assembly learning program
+ *
+ * as -g -32 hello.s -o hello.o
+ * ld -m elf_i386 --entry=start hello.o -o hello
+ *
+ * hidekuno@gmail.com
+ *
+ */
+	.global start,length,print,env,itos,stoi,bit
+	.local msg,buffer,LF,ONE,ZERO,ivalue
 
-.macro entry ssize
+	//------------------------------------------------------------------------
+	// return sub routine
+	//------------------------------------------------------------------------
+	.macro entry ssize
+
 	pushl %ebp 
 	movl %esp,%ebp
 	subl \ssize, %esp
 	pushl %ebx
 	pushl %ecx
 	pushl %edx
-.endm
 
-.macro return
+	.endm
+
+	//------------------------------------------------------------------------
+	// return sub routine
+	//------------------------------------------------------------------------
+	.macro return
+
 	popl %edx
 	popl %ecx
 	popl %ebx
 	leave
 	ret
-.endm
-.macro write s,l
+
+	.endm
+
+	//------------------------------------------------------------------------
+	// system call( write )
+	//------------------------------------------------------------------------
+	.macro write s,l
+
 	pushl %eax
 	pushl %ebx
 	pushl %ecx
@@ -36,31 +57,46 @@
 	popl %ecx
 	popl %ebx
 	popl %eax
-.endm
 
-.macro execute proc,prm
+	.endm
+
+	//------------------------------------------------------------------------
+	// call sub routine
+	//------------------------------------------------------------------------
+	.macro execute proc,prm
+
 	pushl \prm
 	call  \proc
 	addl $4,%esp
-.endm
 
-.macro execute2 proc,prm1,prm2
+	.endm
+
+	//------------------------------------------------------------------------
+	// call sub routine
+	//------------------------------------------------------------------------
+	.macro execute2 proc,prm1,prm2
+
 	pushl \prm1
 	pushl \prm2
 	call  \proc
 	addl $8,%esp
-.endm
-.data
+
+	.endm
+
+	.data
 msg:	.string "Hello,World"
 LF:	.byte 0x0a
 ONE:	.byte 0x31
 ZERO:	.byte 0x30
 ivalue:	.int 1234567890
 
-.bss
+	.bss
 buffer: .space 1024
 
-.text
+	.text
+	//------------------------------------------------------------------------
+	// length of string
+	//------------------------------------------------------------------------
 length:	
 	entry $4
 	movl 8(%ebp), %eax
@@ -72,6 +108,10 @@ loop1:
 break1:	
 	subl 8(%ebp), %eax
 	return
+
+	//------------------------------------------------------------------------
+	// stdout
+	//------------------------------------------------------------------------
 print:
 	entry $4
 	execute length, 8(%ebp)
@@ -79,6 +119,10 @@ print:
 	write 8(%ebp), -4(%ebp)
 	write $LF,$1
 	return
+
+	//------------------------------------------------------------------------
+	// print environment variable
+	//------------------------------------------------------------------------
 env:
 	entry $4
 	movl 8(%ebp), %ebx
@@ -94,6 +138,10 @@ loop2:
 	jmp loop2
 break2:	
 	return
+
+	//------------------------------------------------------------------------
+	// integer -> string
+	//------------------------------------------------------------------------
 itos:	
 	entry $32
 	leal -1(%ebp), %esi
@@ -118,6 +166,9 @@ break3:
 	rep movsb
 	return
 
+	//------------------------------------------------------------------------
+	// string -> integer
+	//------------------------------------------------------------------------
 stoi:   
 	entry $4
 	movl 12(%ebp), %esi
@@ -140,6 +191,10 @@ loop4:
 	jmp loop4
 break4: 
 	return
+
+	//------------------------------------------------------------------------
+	// print bit
+	//------------------------------------------------------------------------
 bit:    
 	entry $4
 	movl 8(%ebp), %eax
@@ -159,6 +214,10 @@ next5_2:
 break5:
 	write $LF, $1
 	return
+
+	//------------------------------------------------------------------------
+	// main
+	//------------------------------------------------------------------------
 start:
 	execute env %esp
 	execute print $msg

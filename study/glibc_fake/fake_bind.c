@@ -1,12 +1,18 @@
+/*
+ * fake glic sample program
+ *
+ * gcc -fPIC -shared fake_bind.c -o fake.so -ldl
+ * LD_PRELOAD=./fake.so test-program
+ *
+ * hidekuno@gmail.com
+ *
+ */
 #define _GNU_SOURCE
 #include <dlfcn.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <sys/select.h>
 
-/* 
-*   gcc -fPIC -shared fake_bind.c -o fake.so  -ldl
-*/
 static const int TEST_DELAY = 30;
 static int counter = 1;
 static int (*bind_org)(int, const struct sockaddr *, socklen_t);
