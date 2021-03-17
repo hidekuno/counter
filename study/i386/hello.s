@@ -1,8 +1,9 @@
 /*
  * 32bit assembly learning program
  *
- * as -g -32 hello.s -o hello.o
- * ld -m elf_i386 --entry=start hello.o -o hello
+ * how to build)
+ *   1. as -g -32 hello.s -o hello.o
+ *   2. ld -m elf_i386 --entry=start hello.o -o hello
  *
  * hidekuno@gmail.com
  *
@@ -15,7 +16,7 @@
 	//------------------------------------------------------------------------
 	.macro entry ssize
 
-	pushl %ebp 
+	pushl %ebp
 	movl %esp,%ebp
 	subl \ssize, %esp
 	pushl %ebx
@@ -97,15 +98,15 @@ buffer: .space 1024
 	//------------------------------------------------------------------------
 	// length of string
 	//------------------------------------------------------------------------
-length:	
+length:
 	entry $4
 	movl 8(%ebp), %eax
-loop1:	
+loop1:
 	cmpb $0, (%eax)
 	je break1
 	inc %eax
 	jmp loop1
-break1:	
+break1:
 	subl 8(%ebp), %eax
 	return
 
@@ -136,18 +137,18 @@ loop2:
 	execute print (%ebx)
 	addl $4,%ebx
 	jmp loop2
-break2:	
+break2:
 	return
 
 	//------------------------------------------------------------------------
 	// integer -> string
 	//------------------------------------------------------------------------
-itos:	
+itos:
 	entry $32
 	leal -1(%ebp), %esi
 	movb $0,(%esi)
 	dec %esi
-	
+
 	movl 12(%ebp),%eax
 	movl $10,%ebx
 loop3:
@@ -169,17 +170,17 @@ break3:
 	//------------------------------------------------------------------------
 	// string -> integer
 	//------------------------------------------------------------------------
-stoi:   
+stoi:
 	entry $4
 	movl 12(%ebp), %esi
 	movl 8(%ebp),%ecx
 	addl %ecx, %esi
 	dec %esi
-	
+
 	movl $0,%eax
 	movl $1,%ebx
 	movl $0,%edx
-loop4:  
+loop4:
 	cmpl %esi,12(%ebp)
 	jg break4
 	movzbl (%esi),%edx
@@ -189,13 +190,13 @@ loop4:
 	dec %esi
 	imul $10,%ebx
 	jmp loop4
-break4: 
+break4:
 	return
 
 	//------------------------------------------------------------------------
 	// print bit
 	//------------------------------------------------------------------------
-bit:    
+bit:
 	entry $4
 	movl 8(%ebp), %eax
 	movl $32,%ecx
