@@ -1,15 +1,14 @@
-Linuxカーネルモジュールのサンプル
+Linux kernel module demo program(like incremental generator)
 =================
 
-# 開発環境
-| Item   | Ver. |備考|
+## Development
+| Item   | Ver. |Remarks|
 |--------|--------|--------|
-| OS     | Ubuntu 18.04.5 LTS | |
+| OS     | Ubuntu 18.04.5 LTS |WSL2|
 | カーネル | 4.19.104-microsoft-standard||
 | GCC    | 7.5.0||
 
-
-# build
+## build(ex.)
 ```
 sudo apt-get install libelf-dev bison flex
 
@@ -27,17 +26,21 @@ cd counter/src
 KERN_SRC=WSL2-Linux-Kernel make
 ```
 
-# counter(/dev版)
+## Test & Run(/dev)
 ```
 sudo mknod /dev/counter c 90 1
 sudo insmod counter.ko
 cat /dev/counter
+...
+cat /dev/counter
 sudo rmmod counter
 ```
 
-# counter(/proc版)
+## Test & Run(/proc)
 ```
 sudo insmod sequence.ko
+cat /proc/sequence
+...
 cat /proc/sequence
 sudo rmmod sequence
 ```
