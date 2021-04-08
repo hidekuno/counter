@@ -14,10 +14,10 @@ SRCS=counter_core.c counter_dev.c counter_proc.c
 all: ${TARGET}
 
 $(TARGET): $(SRCS)
-	make -C $(KERNEL_SRC_DIR) M=$(DEV_SRC_DIR) V=1 modules
+	make -C $(KERNEL_SRC_DIR) M=$(DEV_SRC_DIR) modules
 
 clean:
-	make -C $(KERNEL_SRC_DIR) M=$(DEV_SRC_DIR) V=1 clean
+	make -C $(KERNEL_SRC_DIR) M=$(DEV_SRC_DIR) clean
 
 obj-m := counter.o sequence.o
 

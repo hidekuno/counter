@@ -20,13 +20,13 @@
 static struct proc_dir_entry *proc;
 extern struct file_operations* get_couter_fops(void);
 
-static int proc_init_module(void) {
+static int __init proc_init_module(void) {
 	proc = proc_create_data(PROC_FILE_NAME, 0666, NULL, get_couter_fops(),
 				"Hello,World");
 	return 0;
 }
 
-static void proc_cleanup_module(void) {
+static void __exit proc_cleanup_module(void) {
 	remove_proc_entry(PROC_FILE_NAME, (struct proc_dir_entry *) 0);
 }
 
