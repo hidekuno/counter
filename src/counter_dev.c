@@ -23,7 +23,7 @@ module_param(devname, charp, 0644);
 
 extern struct file_operations* get_couter_fops(void);
 
-int counter_init_module(void) {
+static int __init counter_init_module(void) {
 
 	int ret = register_chrdev(devmajor, devname, get_couter_fops());
 
@@ -34,7 +34,7 @@ int counter_init_module(void) {
 	return 0;
 }
 
-void counter_cleanup_module(void) {
+static void __exit counter_cleanup_module(void) {
 
 	unregister_chrdev(devmajor, devname);
 }
