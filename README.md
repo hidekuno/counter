@@ -52,7 +52,7 @@ KERN_SRC=WSL2-Linux-Kernel make
 ```
 
 
-## Test & Run(/dev)
+## Test & Run
 ```
 sudo mknod /dev/counter c 90 1
 sudo insmod counter.ko
@@ -60,13 +60,4 @@ cat /dev/counter
 ...
 cat /dev/counter
 sudo rmmod counter
-```
-
-## Test & Run(/proc)
-```
-sudo insmod sequence.ko
-cat /proc/sequence
-...
-cat /proc/sequence
-sudo rmmod sequence
 ```
