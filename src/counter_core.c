@@ -3,6 +3,7 @@
 
    hidekuno@gmail.com
 */
+#include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 
@@ -11,76 +12,124 @@ static unsigned int busy = 0;
 static unsigned int eof = 0;
 
 #define MAX_LENGTH 10
+#define VERSION "1.00"
 
 static int counter_open(struct inode *inode, struct file *file)
 {
 
-	if (busy) {
-		printk("counter open error\n");
-		return -EBUSY;
-	}
-	busy = 1;
+    if (busy) {
+        printk("counter open error\n");
+        return -EBUSY;
+    }
+    busy = 1;
 
-	eof = 0;
-	return 0;
+    eof = 0;
+    return 0;
 }
 
 static int counter_release(struct inode *inode, struct file *file)
 {
-	busy = 0;
-	return 0;
+    busy = 0;
+    return 0;
 }
+static ssize_t counter_read_impl(struct file *file,
+                                 char __user * buf,
+                                 size_t count,
+                                 loff_t * ppos,
+                                 unsigned int v)
+{
+    char numstr[16];
+    ssize_t len;
 
+    sprintf(numstr, "%d\n", v);
+    len = strlen(numstr) + 1;
+
+    if (MAX_LENGTH <= len) {
+        return -EINVAL;
+    }
+    if (copy_to_user(buf, numstr, len)) {
+        return -EFAULT;
+    }
+    eof = 1;
+    return len;
+}
 static ssize_t counter_read(struct file *file,
-			    char __user * buf, size_t count, loff_t * ppos)
+                            char __user * buf,
+                            size_t count,
+                            loff_t * ppos)
 {
-	char numstr[16];
-	ssize_t len;
-
-	if (eof) {
-		return 0;
-	}
-
-	sprintf(numstr, "%d\n", value++);
-	len = strlen(numstr) + 1;
-
-	if (MAX_LENGTH <= len) {
-		return -EINVAL;
-	}
-	if (copy_to_user(buf, numstr, len)) {
-		return -EFAULT;
-	}
-	eof = 1;
-	return len;
+    if (eof) {
+        return 0;
+    }
+    return counter_read_impl(file, buf, count, ppos, value++);
 }
-
-static ssize_t counter_write(struct file *file, const char __user * buf,
-			     size_t count, loff_t * ppos)
+static ssize_t counter_readonly(struct file *file,
+                                char __user * buf,
+                                size_t count,
+                                loff_t * ppos)
 {
-	char numstr[16];
-	ssize_t len;
-
-	if (MAX_LENGTH <= count) {
-		return -EINVAL;
-	}
-	if (copy_from_user(numstr, buf, count)) {
-		return -EFAULT;
-	}
-	sscanf(numstr, "%3d", &value);
-	len = strlen(numstr) + 1;
-
-	return len;
+    if (eof) {
+        return 0;
+    }
+    return counter_read_impl(file, buf, count, ppos, value-1);
 }
+static ssize_t counter_write(struct file *file,
+                             const char __user * buf,
+                             size_t count,
+                             loff_t * ppos)
+{
+    char numstr[16];
+    ssize_t len;
 
+    if (MAX_LENGTH <= count) {
+        return -EINVAL;
+    }
+    if (copy_from_user(numstr, buf, count)) {
+        return -EFAULT;
+    }
+    sscanf(numstr, "%3d", &value);
+    len = strlen(numstr) + 1;
+
+    return len;
+}
 static struct file_operations counter_fops = {
-	.owner = THIS_MODULE,
-	.read = counter_read,
-	.write = counter_write,
-	.open = counter_open,
-	.release = counter_release,
+    .owner = THIS_MODULE,
+    .read = counter_read,
+    .write = counter_write,
+    .open = counter_open,
+    .release = counter_release,
+};
+
+static struct file_operations counter_readonly_fops = {
+    .owner = THIS_MODULE,
+    .read = counter_readonly,
+    .open = counter_open,
+    .release = counter_release,
 };
 
 struct file_operations *get_couter_fops(void)
 {
-	return &counter_fops;
+    return &counter_fops;
 }
+struct file_operations *get_couter_readonly_fops(void)
+{
+    return &counter_readonly_fops;
+}
+EXPORT_SYMBOL(get_couter_fops);
+EXPORT_SYMBOL(get_couter_readonly_fops);
+
+#define VERSION "1.00"
+
+static int __init counter_init_module(void) {
+    return 0;
+}
+static void __exit counter_cleanup_module(void) {
+    return;
+}
+module_init(counter_init_module);
+module_exit(counter_cleanup_module);
+
+MODULE_AUTHOR("Hideki Kuno <hidekuno@gmail.com>");
+MODULE_DESCRIPTION("Test Driver");
+MODULE_LICENSE("GPL");
+MODULE_VERSION(VERSION);

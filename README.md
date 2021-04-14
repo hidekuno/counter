@@ -51,10 +51,10 @@ cd counter/src
 KERN_SRC=WSL2-Linux-Kernel make
 ```
 
-
 ## Test & Run
 ```
 sudo mknod /dev/counter c 90 1
+sudo insmod counter_core.ko
 sudo insmod counter.ko
 cat /dev/counter
 ...

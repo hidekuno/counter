@@ -2,9 +2,10 @@
    This is prototype program what linux kernel module
 
    Usage:
+     sudo insmod counter_core.ko
      sudo insmod counter.ko
      sudo mknod /dev/counter c 90 1
-     sudo cat /dev/counter
+     cat /dev/counter
 
    hidekuno@gmail.com
 */
@@ -25,19 +26,19 @@ extern struct file_operations* get_couter_fops(void);
 
 static int __init counter_init_module(void) {
 
-	int ret = register_chrdev(devmajor, devname, get_couter_fops());
+    int ret = register_chrdev(devmajor, devname, get_couter_fops());
 
-	if (ret != 0) {
-		printk("counter registration error\n");
-		return -EIO;
-	}
+    if (ret != 0) {
+        printk("counter registration error\n");
+        return -EIO;
+    }
     printk("counter is loaded\n");
-	return 0;
+    return 0;
 }
 
 static void __exit counter_cleanup_module(void) {
 
-	unregister_chrdev(devmajor, devname);
+    unregister_chrdev(devmajor, devname);
 
     printk("counter is unloaded\n");
 }

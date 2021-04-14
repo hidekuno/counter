@@ -2,6 +2,7 @@
    This is prototype program what linux kernel module
 
    Usage:
+     sudo insmod counter_core.ko
      sudo insmod counter2.ko
      cat /dev/counter
 
