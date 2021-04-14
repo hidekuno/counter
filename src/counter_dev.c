@@ -13,7 +13,7 @@
 #include <linux/kernel.h>
 #include <linux/fs.h>
 
-#define VERSION "0.03"
+#define VERSION "1.00"
 
 static int devmajor = 90;
 static char *devname = "counter";
@@ -27,16 +27,19 @@ static int __init counter_init_module(void) {
 
 	int ret = register_chrdev(devmajor, devname, get_couter_fops());
 
-	if (ret) {
+	if (ret != 0) {
 		printk("counter registration error\n");
 		return -EIO;
 	}
+    printk("counter is loaded\n");
 	return 0;
 }
 
 static void __exit counter_cleanup_module(void) {
 
 	unregister_chrdev(devmajor, devname);
+
+    printk("counter is unloaded\n");
 }
 
 module_init(counter_init_module);

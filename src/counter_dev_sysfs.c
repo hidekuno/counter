@@ -13,7 +13,7 @@
 #include <linux/fs.h>
 #include <linux/cdev.h>
 
-#define VERSION "0.01"
+#define VERSION "2.00"
 
 #define DEV_MINOR (0)
 #define MINOR_NUM (1)
@@ -63,6 +63,7 @@ static int __init counter_init_module(void) {
 
     device_create(counter_class, NULL, MKDEV(counter_major, DEV_MINOR), NULL, devname);
 
+    printk("counter2 is loaded\n");
     return ret;
 
 ERROR:
@@ -85,6 +86,8 @@ static void __exit counter_cleanup_module(void) {
     cdev_del(&counter_cdev);
 
     unregister_chrdev_region(dev, MINOR_NUM);
+
+    printk("counter2 is unloaded\n");
 }
 
 module_init(counter_init_module);
