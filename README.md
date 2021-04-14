@@ -60,4 +60,5 @@ cat /dev/counter
 ...
 cat /dev/counter
 sudo rmmod counter
+sudo rmmod counter_core
 ```
