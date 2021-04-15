@@ -11,7 +11,8 @@ static unsigned int value = 0;
 static unsigned int busy = 0;
 static unsigned int eof = 0;
 
-#define MAX_LENGTH 10
+#define MAX_LENGTH (8)
+#define MAX_VALUE (99999999)
 #define VERSION "1.00"
 
 static int counter_open(struct inode *inode, struct file *file)
@@ -35,18 +36,18 @@ static int counter_release(struct inode *inode, struct file *file)
 static ssize_t counter_read_impl(struct file *file,
                                  char __user * buf,
                                  size_t count,
-                                 loff_t * ppos,
-                                 unsigned int v)
+                                 loff_t * ppos)
 {
     char numstr[16];
     ssize_t len;
 
-    sprintf(numstr, "%d\n", v);
+    if (MAX_VALUE < value) {
+        value = 0;
+    }
+
+    sprintf(numstr, "%d\n", value);
     len = strlen(numstr) + 1;
 
-    if (MAX_LENGTH <= len) {
-        return -EINVAL;
-    }
     if (copy_to_user(buf, numstr, len)) {
         return -EFAULT;
     }
@@ -58,10 +59,13 @@ static ssize_t counter_read(struct file *file,
                             size_t count,
                             loff_t * ppos)
 {
+    int ret = 0;
     if (eof) {
         return 0;
     }
-    return counter_read_impl(file, buf, count, ppos, value++);
+    ret = counter_read_impl(file, buf, count, ppos);
+    value++;
+    return ret;
 }
 static ssize_t counter_readonly(struct file *file,
                                 char __user * buf,
@@ -71,7 +75,7 @@ static ssize_t counter_readonly(struct file *file,
     if (eof) {
         return 0;
     }
-    return counter_read_impl(file, buf, count, ppos, value-1);
+    return counter_read_impl(file, buf, count, ppos);
 }
 static ssize_t counter_write(struct file *file,
                              const char __user * buf,
@@ -81,13 +85,13 @@ static ssize_t counter_write(struct file *file,
     char numstr[16];
     ssize_t len;
 
-    if (MAX_LENGTH <= count) {
+    if (MAX_LENGTH < count) {
         return -EINVAL;
     }
     if (copy_from_user(numstr, buf, count)) {
         return -EFAULT;
     }
-    sscanf(numstr, "%3d", &value);
+    sscanf(numstr, "%d", &value);
     len = strlen(numstr) + 1;
 
     return len;
