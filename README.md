@@ -53,12 +53,22 @@ KERN_SRC=WSL2-Linux-Kernel make
 
 ## Test & Run
 ```
-sudo mknod /dev/counter c 90 1
-sudo insmod counter_core.ko
-sudo insmod counter.ko
-cat /dev/counter
-...
-cat /dev/counter
-sudo rmmod counter
-sudo rmmod counter_core
+$ sudo mknod /dev/counter c 90 1
+$ sudo insmod counter_core.ko
+$ sudo insmod counter.ko
+$ cat /dev/counter
+0
+$ cat /dev/counter
+1
+$ cat /dev/counter
+2
+$ sudo bash -c "echo -n 99999998 > /dev/counter"
+$ cat /dev/counter
+99999998
+$ cat /dev/counter
+99999999
+$ cat /dev/counter
+0
+$ sudo rmmod counter counter_core
+$
 ```
