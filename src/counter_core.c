@@ -6,6 +6,7 @@
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
+#include <linux/ctype.h>
 
 static unsigned int value = 0;
 static unsigned int busy = 0;
@@ -13,7 +14,7 @@ static unsigned int eof = 0;
 
 #define MAX_LENGTH (8)
 #define MAX_VALUE (99999999)
-#define VERSION "1.00"
+#define VERSION "1.01"
 
 static int counter_open(struct inode *inode, struct file *file)
 {
@@ -46,7 +47,7 @@ static ssize_t counter_read_impl(struct file *file,
     }
 
     sprintf(numstr, "%d\n", value);
-    len = strlen(numstr) + 1;
+    len = strlen(numstr);
 
     if (copy_to_user(buf, numstr, len)) {
         return -EFAULT;
@@ -84,15 +85,23 @@ static ssize_t counter_write(struct file *file,
 {
     char numstr[16];
     ssize_t len;
+    int i = 0;
 
-    if (MAX_LENGTH < count) {
+    if (MAX_LENGTH < count || count <= 0) {
         return -EINVAL;
     }
     if (copy_from_user(numstr, buf, count)) {
         return -EFAULT;
     }
+
+    /* Not support whitespace('\n','\r'...) */
+    for (i = 0; i < count; ++i) {
+        if (0 == isdigit(numstr[i])) {
+            return -EINVAL;
+        }
+    }
     sscanf(numstr, "%d", &value);
-    len = strlen(numstr) + 1;
+    len = strlen(numstr);
 
     return len;
 }
@@ -121,17 +130,6 @@ struct file_operations *get_couter_readonly_fops(void)
 }
 EXPORT_SYMBOL(get_couter_fops);
 EXPORT_SYMBOL(get_couter_readonly_fops);
-
-#define VERSION "1.00"
-
-static int __init counter_init_module(void) {
-    return 0;
-}
-static void __exit counter_cleanup_module(void) {
-    return;
-}
-module_init(counter_init_module);
-module_exit(counter_cleanup_module);
 
 MODULE_AUTHOR("Hideki Kuno <hidekuno@gmail.com>");
 MODULE_DESCRIPTION("Test Driver");
