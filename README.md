@@ -1,20 +1,16 @@
-Linux kernel module demo program(like incremental generator)
+Linux kernel module demo program
 =================
+## Overview
+- This Program is a like incremental generator.
 
-## Development
+## Development(ex. 4.19.104-microsoft-standard)
 | Item   | Ver. |Remarks|
 |--------|--------|--------|
 | OS     | Ubuntu 18.04.5 LTS |WSL2|
 | Kernel | 4.19.104-microsoft-standard||
 | GCC    | 7.5.0||
 
-| Item   | Ver. |Remarks|
-|--------|--------|--------|
-| OS     | Ubuntu 20.04 LTS |WSL2|
-| Kernel | 5.4.72-microsoft-standard||
-| GCC    | 9.3.0||
-
-## build(ex. 4.19.104-microsoft-standard)
+## Build(ex. 4.19.104-microsoft-standard)
 ```
 sudo apt-get install libelf-dev bison flex
 
@@ -31,8 +27,14 @@ git clone https://github.com/hidekuno/counter.git
 cd counter/src
 KERN_SRC=WSL2-Linux-Kernel make
 ```
+## Development(ex. 5.4.72-microsoft-standard)
+| Item   | Ver. |Remarks|
+|--------|--------|--------|
+| OS     | Ubuntu 20.04 LTS |WSL2|
+| Kernel | 5.4.72-microsoft-standard||
+| GCC    | 9.3.0||
 
-## build(ex. 5.4.72-microsoft-standard)
+## Build(ex. 5.4.72-microsoft-standard)
 ```
 sudo apt-get install libelf-dev bison flex
 
