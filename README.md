@@ -42,10 +42,10 @@ cd /usr/src
 sudo git clone https://github.com/microsoft/WSL2-Linux-Kernel.git
 
 cd /usr/src/WSL2-Linux-Kernel
-git checkout linux-msft-5.4.72
+sudo git checkout linux-msft-5.4.72
 sudo bash -c "cat /proc/config.gz  | gzip -dc > /usr/src/WSL2-Linux-Kernel/.config"
-make modules_prepare
-make scripts
+sudo make modules_prepare
+sudo make scripts
 
 cd $HOME
 git clone https://github.com/hidekuno/counter.git
