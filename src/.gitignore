@@ -6,3 +6,4 @@
 test_file
 *.cmd
 .tmp_versions
+*.d
