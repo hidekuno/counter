@@ -53,6 +53,25 @@ cd counter/src
 KERN_SRC=WSL2-Linux-Kernel make
 ```
 
+## Build(ex. 5.10.60.1-microsoft-standard-WSL2)
+```
+sudo apt-get install libelf-dev bison flex
+
+cd /usr/src
+sudo git clone https://github.com/microsoft/WSL2-Linux-Kernel.git
+
+cd /usr/src/WSL2-Linux-Kernel
+sudo git checkout linux-msft-wsl-5.10.y
+sudo bash -c "cat /proc/config.gz  | gzip -dc > /usr/src/WSL2-Linux-Kernel/.config"
+sudo make modules_prepare
+sudo make scripts
+
+cd $HOME
+git clone https://github.com/hidekuno/counter.git
+cd counter/src
+KERN_SRC=WSL2-Linux-Kernel make CFLAGS=-DKERNEL_510
+```
+
 ## Test & Run
 ```
 $ sudo mknod /dev/counter c 90 1
