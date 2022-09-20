@@ -33,7 +33,8 @@
 	popl %edx
 	popl %ecx
 	popl %ebx
-	leave
+	movl %ebp,%esp
+	popl %ebp
 	ret
 
 	.endm
@@ -89,6 +90,7 @@ msg:	.string "Hello,World"
 LF:	.byte 0x0a
 ONE:	.byte 0x31
 ZERO:	.byte 0x30
+	.align 4
 ivalue:	.int 1234567890
 
 	.bss
