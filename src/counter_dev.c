@@ -10,8 +10,6 @@
    hidekuno@gmail.com
 */
 #include <linux/module.h>
-#include <linux/version.h>
-#include <linux/kernel.h>
 #include <linux/fs.h>
 
 #define VERSION "1.00"
