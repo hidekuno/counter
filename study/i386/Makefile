@@ -3,7 +3,7 @@
 #
 # hidekuno@gmail.com
 #
-TARGET = hello stck
+TARGET = hello stck of
 
 all: $(TARGET)
 
@@ -20,5 +20,11 @@ stck: stck.o
 stck.o: stck.c
 	gcc -c -m32 stck.c
 
+of: of.o
+	gcc -m32 of.o -o of
+
+of.o: of.c
+	gcc -c -m32 -fno-stack-protector of.c
+
 clean:
-	rm -f stck hello *.o
+	rm -f $(TARGET) *.o
