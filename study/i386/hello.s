@@ -165,22 +165,23 @@ itos_break1:
         //------------------------------------------------------------------------
 stoi:
         entry $4
-        movl 12(%ebp),%esi
-        movl 8(%ebp),%ecx
+        movl 8(%ebp),%esi
+        execute len %esi
+        movl %eax,%ecx
         addl %ecx,%esi
-        dec %esi
 
         xorl %eax,%eax
         movl $1,%ebx
-        xorl %ebx,%edx
 stoi_loop1:
-        cmpl %esi,12(%ebp)
-        jg stoi_break1
-        movzbl (%esi),%edx
-        andl $0x0F,%edx
+        dec %esi
+        movb (%esi),%dl
+        andl $0x0f, %edx
         imul %ebx,%edx
         addl %edx,%eax
-        dec %esi
+
+        dec %ecx
+        jz stoi_break1
+
         imul $10,%ebx
         jmp stoi_loop1
 stoi_break1:
@@ -224,7 +225,7 @@ start:
         execute print $msg
         execute2 itos ivalue,$buffer
         movb $0,buffer+5
-        execute2 stoi $buffer,$5
+        execute stoi $buffer
         execute bit $10
 
         movl $1,%eax
