@@ -194,10 +194,18 @@ bit:
         entry $4
         movl 8(%ebp),%eax
         movl $32,%ecx
-        movl $28,%ebx
+        movl $4,%ebx
 bit_loop1:
         cmpl $0,%ecx
-        je bit_break1
+        jz bit_break1
+
+        cmpl $0,%ebx
+        jnz bit_next0
+        write $SPACE,$1
+        movl $4,%ebx
+bit_next0:
+        dec %ebx
+
         shll %eax
         jc bit_next1
         write $ZERO,$1
@@ -206,12 +214,6 @@ bit_next1:
         write $ONE,$1
 bit_next2:
         dec %ecx
-
-        cmpl %ebx,%ecx
-        jne bit_next3
-        write $SPACE,$1
-        subl $4,%ebx
-bit_next3:
         jmp bit_loop1
 bit_break1:
         write $LF,$1
