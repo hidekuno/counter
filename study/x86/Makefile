@@ -3,7 +3,7 @@
 #
 # hidekuno@gmail.com
 #
-TARGET = hello stck of
+TARGET = hello hello64 stck of
 
 all: $(TARGET)
 
@@ -12,6 +12,12 @@ hello: hello.o
 
 hello.o: hello.s
 	as -g -32 hello.s -o hello.o
+
+hello64: hello64.o
+	ld --entry=_main hello64.o -o hello64
+
+hello64.o: hello64.s
+	as --defsym Linux=1 -g hello64.s -o hello64.o
 
 stck: stck.o
 	gcc -m32 stck.o -o stck
