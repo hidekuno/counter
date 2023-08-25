@@ -3,10 +3,10 @@ Linux kernel module demo program
 ## Overview
 - This Program is a like incremental generator.
 
-## Development(ex. 4.19.104-microsoft-standard)
+## Development(WSL1)
 | Item   | Ver. |Remarks|
 |--------|--------|--------|
-| OS     | Ubuntu 18.04.5 LTS |WSL2|
+| OS     | Ubuntu 18.04.5 LTS |WSL1|
 | Kernel | 4.19.104-microsoft-standard||
 | GCC    | 7.5.0||
 
@@ -27,7 +27,7 @@ git clone https://github.com/hidekuno/counter.git
 cd counter/src
 KERN_SRC_DIR=/usr/src/WSL2-Linux-Kernel make
 ```
-## Development
+## Development(WSL2)
 | Item   | Ver. |Remarks|
 |--------|--------|--------|
 | OS     | Ubuntu 20.04 LTS |WSL2|
@@ -87,7 +87,7 @@ cd counter/src
 KERN_SRC_DIR=/usr/src/WSL2-Linux-Kernel make CFLAGS=-DKERNEL_51X
 ```
 
-## Development
+## Development(Amazon Linux)
 | Item   | Ver. |Remarks|
 |--------|--------|--------|
 | OS     | Amazon Linux release 2023 (Amazon Linux)|AWS EC2|
