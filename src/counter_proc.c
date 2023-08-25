@@ -21,7 +21,7 @@ extern struct file_operations* get_couter_readonly_fops(void);
 
 static int __init proc_init_module(void) {
 
-#ifdef KERNEL_510
+#ifdef KERNEL_51X
     static struct proc_ops readonly_ops;
     const struct file_operations *fs_ops = get_couter_readonly_fops();
     readonly_ops.proc_read = fs_ops->read;
