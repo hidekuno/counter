@@ -1,0 +1,6 @@
+*.o
+*.ko
+export_syms
+machine
+opt_global.h
+x86
