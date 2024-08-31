@@ -28,7 +28,7 @@ $ cat /dev/counter
 1
 $ cat /dev/counter
 2
-$ sudo bash -c "echo 100 > /dev/counter"
+$ sudo bash -c "echo -n 99999998 > /dev/counter"
 $ cat /dev/counter
 99999998
 $ cat /dev/counter
