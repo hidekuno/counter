@@ -7,6 +7,7 @@
 #include <sys/systm.h>
 #include <sys/conf.h>
 #include <sys/uio.h>
+#include <sys/ctype.h>
 
 static unsigned int value = 0;
 static unsigned int busy = 0;
@@ -68,6 +69,14 @@ static int counter_write(struct cdev *dev, struct uio *uio, int ioflag) {
     if (error != 0) {
         return error;
     }
+
+    /* Not support whitespace('\n','\r'...) */
+    for (int i = 0; i < uio->uio_offset; ++i) {
+        if (0 == isdigit(numstr[i])) {
+            return EINVAL;
+        }
+    }
+
     sscanf(numstr, "%10d", &value);
     return SUCCESS;
 }
