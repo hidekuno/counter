@@ -28,57 +28,49 @@ vfs::vop_write:return
         self->bytes[stackdepth] = 0;
 }
 
-fbt::bufwrite:entry
-/pid != $pid && execname == "a.out"/
-{
-        printf("entry %d %d 0x%08X\n", timestamp, args[0]->b_bcount, args[0]->b_flags);
-}
-fbt::bufwrite:return
-/pid != $pid && execname == "a.out"/
-{
-        printf("return %d %d\n", timestamp, arg1);
-}
-
+fbt::bufwrite:entry,
 fbt::bdwrite:entry
 /pid != $pid && execname == "a.out"/
 {
-        printf("entry %d %d\n", timestamp, args[0]->b_bcount);
+        printf("entry %d %d %d 0x%08X %d\n", timestamp, args[0]->b_bufsize, args[0]->b_bcount, args[0]->b_flags, args[0]->b_vp->v_type);
 }
-fbt::bdwrite:return
+fbt::bdwrite:return,
+fbt::bufwrite:return
 /pid != $pid && execname == "a.out"/
 {
         printf("return %d\n", timestamp);
 }
 
+fbt:kernel:ffs_truncate:entry
+/pid != $pid && execname == "a.out"/
+{
+        printf("entry %d %d\n",timestamp,arg1);
+}
+fbt:kernel:uiomove_fromphys:return,
+fbt:kernel:vm_fault:return
+/pid != $pid && execname == "a.out"/
+{
+        printf("return %d %d\n", timestamp, arg1);
+}
+
 fbt:kernel:ufs_strategy:entry,
 vfs:vop:vop_strategy:entry,
-fbt:kernel:bufstrategy:entry
+fbt:kernel:bufstrategy:entry,
+fbt:kernel:uiomove_fromphys:entry,
+fbt:kernel:vm_fault:entry,
+fbt:kernel:ffs_update:entry,
+fbt:kernel:ffs_balloc_ufs2:entry,
+fbt:kernel:bwait:entry
 /pid != $pid && execname == "a.out"/
 {
         printf("entry %d\n", timestamp);
 }
 fbt:kernel:ufs_strategy:return,
 vfs:vop:vop_strategy:return,
-fbt:kernel:bufstrategy:return
-/pid != $pid && execname == "a.out"/
-{
-        printf("return %d\n", timestamp);
-}
-fbt:kernel:cluster_write:entry,
-fbt:kernel:ffs_truncate:entry,
-fbt:kernel:ffs_update:entry,
-fbt:kernel:ffs_balloc_ufs2:entry,
-fbt:kernel:vfs_busy_pages:entry,
-fbt:kernel:bwait:entry
-/pid != $pid && execname == "a.out"/
-{
-        printf("entry %d\n", timestamp);
-}
-fbt:kernel:cluster_write:return,
+fbt:kernel:bufstrategy:return,
 fbt:kernel:ffs_truncate:return,
 fbt:kernel:ffs_update:return,
 fbt:kernel:ffs_balloc_ufs2:return,
-fbt:kernel:vfs_busy_pages:return,
 fbt:kernel:bwait:return
 /pid != $pid && execname == "a.out"/
 {
