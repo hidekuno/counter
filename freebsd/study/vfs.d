@@ -32,10 +32,10 @@ fbt::bufwrite:entry,
 fbt::bdwrite:entry
 /pid != $pid && execname == "a.out"/
 {
-        printf("entry %d %d %d 0x%08X %d\n", timestamp, args[0]->b_bufsize, args[0]->b_bcount, args[0]->b_flags, args[0]->b_vp->v_type);
+        printf("entry %d %d %d 0x%08X %d\n", timestamp, args[0]->b_bufsize, args[0]->b_bcount, args[0]->b_flags, args[0]->b_vp->v_type & 0x000000ff);
 }
-fbt::bdwrite:return,
-fbt::bufwrite:return
+fbt::bufwrite:return,
+fbt::bdwrite:return
 /pid != $pid && execname == "a.out"/
 {
         printf("return %d\n", timestamp);
@@ -52,7 +52,9 @@ fbt:kernel:vm_fault:return
 {
         printf("return %d %d\n", timestamp, arg1);
 }
-
+fbt:kernel:pmap_enter:entry,
+fbt:kernel:vm_pager_get_pages:entry,
+fbt:kernel:vn_io_fault1:entry,
 fbt:kernel:ufs_strategy:entry,
 vfs:vop:vop_strategy:entry,
 fbt:kernel:bufstrategy:entry,
@@ -65,6 +67,9 @@ fbt:kernel:bwait:entry
 {
         printf("entry %d\n", timestamp);
 }
+fbt:kernel:pmap_enter:return,
+fbt:kernel:vm_pager_get_pages:return,
+fbt:kernel:vn_io_fault1:return,
 fbt:kernel:ufs_strategy:return,
 vfs:vop:vop_strategy:return,
 fbt:kernel:bufstrategy:return,
@@ -76,3 +81,14 @@ fbt:kernel:bwait:return
 {
         printf("return %d\n", timestamp);
 }
+
+/***
+fbt:kernel:vfs_bio_clrbuf:entry,
+fbt:kernel:vfs_bio_clrbuf:return,
+fbt:kernel:pmap_copy_pages:entry,
+fbt:kernel:pmap_copy_pages:return,
+fbt:kernel:vm_pager_allocate:entry,
+fbt:kernel:vm_pager_allocate:return,
+fbt:kernel:vm_page_alloc:entry,
+fbt:kernel:vm_page_alloc:return,
+***/
